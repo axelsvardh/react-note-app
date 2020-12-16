@@ -6,8 +6,7 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import List from './components/List'
 import Form from './components/Form'
-import {getNotes, createNote} from './utils/noteHelpers'
-import * as N from './utils/noteHelpers'
+import {getNotes} from './utils/noteHelpers'
 
 function App() {
   const [selectedNote, setSelectedNote] = useState(undefined)
@@ -26,22 +25,20 @@ function App() {
 
   const onClickNewNote = () => setSelectedNote(undefined)
 
-  const jsonNoteArray = JSON.stringify(notes)
-
   return (
     <div>
       <Container>
         <Row>
-          <Col className="p-5" style={{backgroundColor: 'lightblue', fontSize: '40px'}} xs={12}>
+          <Col className="p-5" style={{backgroundColor: 'lightgray', fontSize: '40px'}} xs={12}>
             Notes
           </Col>
-          <Col style={{backgroundColor: 'lightgreen'}} xs={12} md={4}>
+          <Col style={{}} xs={12} md={4}>
             <Button onClick={onClickNewNote} className="my-3" variant="dark" size="md" block>
               New Note
             </Button>
             <List notes={notes} selectedNote={selectedNote} setSelectedNote={setSelectedNote} />
           </Col>
-          <Col style={{backgroundColor: 'lightgrey'}} xs={12} md={8}>
+          <Col style={{borderLeft: 'solid 1px #dddddd'}} xs={12} md={8}>
             <Form refreshList={refreshList} selectedNote={selectedNote} />
           </Col>
         </Row>

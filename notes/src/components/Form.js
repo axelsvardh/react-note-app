@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import {createNote, getNotes, updateNote, deleteNote} from '../utils/noteHelpers'
+import {createNote, updateNote, deleteNote} from '../utils/noteHelpers'
 
 const STATUS_INITIAL_VALUE = ''
 
 export default function F({selectedNote, setSelectedNote, refreshList}) {
   const [title, setTitle] = useState('')
-  const [isSaved, setIsSaved] = useState(false)
+  const [body, setBody] = useState('')
   const [status, setStatus] = useState(STATUS_INITIAL_VALUE)
 
   useEffect(() => {
@@ -19,15 +19,20 @@ export default function F({selectedNote, setSelectedNote, refreshList}) {
     setTitle('')
   }, [selectedNote])
 
-  const [body, setBody] = useState('')
+  useEffect(() => {
+    if (selectedNote) setBody(selectedNote.body)
+  }, [selectedNote])
+
   const onSetTitle = (e) => setTitle(e.target.value)
   const onSetBody = (e) => setBody(e.target.value)
 
-  const onSave = () => {
+  const onSave = (e) => {
+    e.preventDefault()
     setTitle('')
+    setBody('')
     setStatus('SAVED!')
     if (selectedNote) {
-      updateNote(selectedNote.id, title)
+      updateNote(selectedNote.id, title, body)
       return refreshList()
     }
 
@@ -40,11 +45,14 @@ export default function F({selectedNote, setSelectedNote, refreshList}) {
   //   e.preventDefault()
   // }
 
-  const onDelete = () => {
+  const onDelete = (e) => {
+    e.preventDefault()
+    if (!selectedNote) return
     const {id} = selectedNote
     deleteNote(id)
     refreshList()
     setTitle('')
+    setBody('')
     setStatus('DELETED!')
   }
 
@@ -60,7 +68,13 @@ export default function F({selectedNote, setSelectedNote, refreshList}) {
         size="lg"
       />
       <Form.Label>Note</Form.Label>
-      <Form.Control onChange={onSetBody} as="textarea" size="lg" placeholder="Enter note" />
+      <Form.Control
+        onChange={onSetBody}
+        value={body}
+        as="textarea"
+        size="lg"
+        placeholder="Enter note"
+      />
 
       <Button onClick={onSave} variant="primary" className="m-4">
         Save
